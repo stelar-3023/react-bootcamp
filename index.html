@@ -18,16 +18,22 @@
     <div id="app"></div>
 
     <script>
-      const name = "Steve";
-      const handle = "@larsenfit3";
-      const nameElement = React.createElement("h1", null, name);
-      const handleElement = React.createElement("h3", null, handle);
+      // const name = "Steve";
+      // const handle = "@larsenfit3";
+
+      function NameComponent(props) {
+        return React.createElement("h1", null, props.name);
+      }
+
+      function HandleComponent(props) {
+        return React.createElement("h3", null, props.handle);
+      }
 
       const wrapperElement = React.createElement(
         "div",
         { id: "container" },
-        nameElement,
-        handleElement
+        React.createElement(NameComponent, { name: "Steve" }),
+        React.createElement(HandleComponent, { handle: "@larsenfit3" })
       );
 
       //console.log("headerElement", headerElement);
