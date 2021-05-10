@@ -23,20 +23,23 @@
       const handle = "@larsenfit3";
 
       function NameComponent(props) {
-        return <h1>{props.name}</h1>;
+        return <h1>{props.name}-{props.handleComponent}</h1>;
         // return React.createElement("h1", null, props.name);
       }
 
       function HandleComponent(props) {
-        return <h3>{props.handle}</h3>;
+        return <span>{props.handle}</span>;
         // return React.createElement("h3", null, props.handle);
       }
 
       function App() {
         return (
           <div id="container">
-            <NameComponent name={name} />
-            <HandleComponent handle={handle} />
+            <NameComponent
+              name={name}
+              handleComponent={<HandleComponent handle={handle} />}
+            />
+             {/*<HandleComponent handle={handle} />*/}
           </div>
         );
       }
