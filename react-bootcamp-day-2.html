@@ -25,15 +25,31 @@
           </ul>
         );
       }
-
-      function App() {
-        const friends = ["Dawn", "Steve", "Dave"];
-        return (
-          <div>
-            <FriendsList list={friends} />
-          </div>
-        );
+      // Class is used when you want React to manage state
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            friends: ["Dawn", "Steve", "Dave"],
+          };
+        }
+        render() {
+          return (
+            <div>
+              <FriendsList list={this.state.friends} />
+            </div>
+          );
+        }
       }
+
+      // function App() {
+      //   const friends = ["Dawn", "Steve", "Dave"];
+      //   return (
+      //     <div>
+      //       <FriendsList list={friends} />
+      //     </div>
+      //   );
+      // }
 
       ReactDOM.render(<App />, document.getElementById("app"));
     </script>
