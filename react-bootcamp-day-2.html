@@ -16,35 +16,136 @@
     <div id="app"></div>
 
     <script type="text/babel">
-      function FriendsList(props) {
+      function ActiveFriends(props) {
         return (
-          <ul>
-            {props.list.map((name) => (
-              <li key={name}>{name}</li>
-            ))}
-          </ul>
+          <div>
+            <h2>Active Friends</h2>
+            <ul>
+              {props.list.map((friend) => (
+                <li key={friend.name}>
+                  <span>{friend.name}</span>
+                  <button>Remove</button>
+                </li>
+              ))}
+            </ul>
+          </div>
         );
       }
+      function InactiveFriends(props) {
+        return (
+          <div>
+            <h2>Inactive Friends</h2>
+            <ul>
+              {props.list.map((friend) => (
+                <li key={friend.name}>
+                  <span>{friend.name}</span>
+                  <button>Remove</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+      // function FriendsList(props) {
+      //   return (
+      //     <ul>
+      //       {props.list.map((friend) => (
+      //         <li key={friend.name}>
+      //           <span>{friend.name}</span>
+      //           <button onClick={() => props.onRemoveFriend(friend.name)}>
+      //             Remove
+      //           </button>
+      //         </li>
+      //       ))}
+      //     </ul>
+      //   );
+      // }
       // Class is used when you want React to manage state
       class App extends React.Component {
         constructor(props) {
           super(props);
           this.state = {
-            friends: ["Dawn", "Steve", "Dave"],
+            friends: [
+              {
+                name: "Dawn",
+                active: true,
+              },
+              {
+                name: "Steve",
+                active: true,
+              },
+              {
+                name: "Dave",
+                active: false,
+              },
+            ],
+            input: "",
           };
+          this.handleAddFriend = this.handleAddFriend.bind(this);
+          this.handleRemoveFriend = this.handleRemoveFriend.bind(this);
+          this.updateInput = this.updateInput.bind(this);
         }
-        handleAddFriend() {}
+        handleAddFriend() {
+          this.setState((currentState) => {
+            return {
+              friends: currentState.friends.concat([
+                {
+                  name: currentState.input,
+                  active: true,
+                },
+              ]),
+              input: "",
+            };
+          });
+        }
+
         handleRemoveFriend(name) {
           this.setState((currentState) => {
             return {
-              friends: currentState.friends.filter((friend) => friend !== name),
+              friends: currentState.friends.filter(
+                (friend) => friend.name !== name
+              ),
             };
           });
+        }
+        updateInput(event) {
+          const value = event.target.value;
+
+          this.setState((currentState) => ({
+            input: value,
+          }));
         }
         render() {
           return (
             <div>
-              <FriendsList list={this.state.friends} />
+              <input
+                type="text"
+                placeholder="new friend"
+                value={this.state.input}
+                onChange={this.updateInput}
+              />
+              <button onClick={this.handleAddFriend}>Submit</button>
+              <div>
+                <button
+                  onClick={() =>
+                    this.setState({
+                      friends: [],
+                    })
+                  }
+                >
+                  Clear All
+                </button>
+              </div>
+              <ActiveFriends
+                list={this.state.friends.filter(
+                  (friend) => friend.active === true
+                )}
+              />
+              <InactiveFriends
+                list={this.state.friends.filter(
+                  (friend) => friend.active === false
+                )}
+              />
             </div>
           );
         }
