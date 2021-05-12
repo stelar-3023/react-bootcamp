@@ -15,7 +15,60 @@
   <body>
     <div id="app"></div>
 
+    <script>
+      window.API = {
+        fetchFriends() {
+          return new Promise((res, rej) => {
+            const friends = [
+              {
+                name: "Dawn",
+                active: true,
+              },
+              {
+                name: "Steve",
+                active: true,
+              },
+              {
+                name: "Dave",
+                active: false,
+              },
+            ];
+
+            setTimeout(() => res(friends), 2000);
+          });
+        },
+      };
+    </script>
+
     <script type="text/babel">
+      class Loading extends React.Component {
+        constructor(props) {
+          super(props);
+
+          this.state = {
+            text: "Loading",
+          };
+        }
+        componentDidMount() {
+          const stopper = this.state.text + "...";
+
+          this.interval = window.setInterval(() => {
+            this.state.text === stopper
+              ? this.setState({ text: "Loading" })
+              : this.setState((currentState) => {
+                  return {
+                    text: currentState.text + ".",
+                  };
+                });
+          }, 300);
+        }
+        componentWillUnmount() {
+          window.clearInterval(this.interval);
+        }
+        render() {
+          return <h3>{this.state.text}</h3>;
+        }
+      }
       function ActiveFriends(props) {
         return (
           <div>
@@ -72,26 +125,35 @@
         constructor(props) {
           super(props);
           this.state = {
-            friends: [
-              {
-                name: "Dawn",
-                active: true,
-              },
-              {
-                name: "Steve",
-                active: true,
-              },
-              {
-                name: "Dave",
-                active: false,
-              },
-            ],
+            friends: [],
             input: "",
+            loading: true,
           };
           this.handleAddFriend = this.handleAddFriend.bind(this);
           this.handleRemoveFriend = this.handleRemoveFriend.bind(this);
           this.handleToggleFriend = this.handleToggleFriend.bind(this);
           this.updateInput = this.updateInput.bind(this);
+
+          console.log("--constructor--");
+        }
+
+        componentDidMount() {
+          console.log("--componentDidMount--");
+          API.fetchFriends().then((friends) => {
+            // console.log("FRIENDS", friends);
+            this.setState({
+              friends,
+              loading: false,
+            });
+          });
+        }
+
+        componentDidUpdate() {
+          console.log("--componentDidUpdate--");
+        }
+
+        componentWillUnmount() {
+          console.log("--componentWillUnmount--");
         }
         handleAddFriend() {
           this.setState((currentState) => {
@@ -143,6 +205,12 @@
           }));
         }
         render() {
+          console.log("--render--");
+
+          if (this.state.loading === true) {
+            return <Loading />;
+          }
+
           return (
             <div>
               <input
